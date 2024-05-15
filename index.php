@@ -10,13 +10,9 @@ if(isset($_SESSION['id'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $login = $_POST["login"];
     $password = $_POST["password"];
-    if(!empty($_SESSION['user_id'])){
-        header("Location:change.php?"."&id=".$_SESSION['id']);
-    }
-    
     
     // Подключение к базе данных
-    $db = mysqli_connect('localhost', 'd2min', 'Qwerty40982', 'Form');
+    $db = mysqli_connect('localhost', 'u67381', '8515451', 'u67381');
     if (!$db) {
         die('Error connecting to database: ' . mysqli_connect_error());
     }
@@ -41,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         setcookie("aboutC", $about, time()+5000,"/");
         // Использование данных из сессии
         $_SESSION['id'] = $id;
+        // header("Location:index.php?login=".$login);
         header("Location:change.php?");
     }else{
         $answer = "Неправильный пароль";
@@ -69,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <button>Вход</button>
                 </div>
             </form>
-            <a href="http://95.213.139.91/MyForm/form.php"><button>Я новый пользователь</button></a>
-            <a href="http://95.213.139.91/MyForm/allTable.php"><button>Посмотреть таблицу</button></a>
+            <a href="http://u67381.kubsu-dev.ru/andy4/form.php"><button>Я новый пользователь</button></a>
+            <!-- <a href="http://u67381.kubsu-dev.ru/andy4/admin.php"><button>Войти как администратор</button></a> -->
         </div>
     </div>
 </body>

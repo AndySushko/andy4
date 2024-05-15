@@ -46,6 +46,10 @@
             setcookie("date", $date, time()+5000,"/");
         }
 
+
+        $safe_str = htmlspecialchars($about, ENT_QUOTES);
+
+        
         if($flag == 1){
             header("Location: form.php?answer=".$answer);
         }else{
@@ -94,7 +98,10 @@
         <?php
             if($answer != ""){
                 echo "Логин-".$user_login."  Пароль-".$user_pass;
-            } 
+            }
+            if(!empty($_COOKIE['about'])){
+                echo "Вы ввели недопустимый код в поле 'Напишите о себе'";
+            }
         ?>
     </h1>
     <form id="form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">

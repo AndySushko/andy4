@@ -1,6 +1,6 @@
 <?php
     // Conected to BD
-    $db = mysqli_connect('localhost', 'd2min', 'Qwerty40982', 'Form');
+    $db = mysqli_connect('localhost', 'u67381', '8515451', 'u67381');
     if (!$db) {
         die('Error connecting to database: ' . mysqli_connect_error());
     }

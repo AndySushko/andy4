@@ -3,7 +3,7 @@
 
     session_start();
     if(!isset($_SESSION["id"])){
-        header("Location: index.php?");
+        header("Location: index.php?answer='Error'");
         exit();
     }
     
@@ -53,7 +53,7 @@
             $answer = "Ошибка";
             header("Location: change.php?answer=".$answer);
         }else{
-            $db = mysqli_connect("localhost","d2min","Qwerty40982","Form");
+            $db = mysqli_connect('localhost', 'u67381', '8515451', 'u67381');
             if(!$db){
                 die('Error connecting to database: ' . mysqli_connect_error());
             }

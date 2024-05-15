@@ -40,9 +40,9 @@ const server = http.createServer((req, res) => {
       // Подключение к бд
       const db = mysql.createConnection({
         host:"localhost",
-        user:"d2min",
-        password:"Qwerty40982",
-        database:"Form",
+        user:"u67381",
+        password:"8515451",
+        database:"u67381",
       });
       
       db.connect((err)=>{
@@ -82,10 +82,10 @@ const server = http.createServer((req, res) => {
   // Вывод таблицы в бд
   else  if (req.method === 'GET' && req.url === '/tables') {
     const db = mysql.createConnection({
-      host: 'localhost',
-      user: 'd2min',
-      password: 'Qwerty40982',
-      database: 'Form'
+      host:"localhost",
+        user:"u67381",
+        password:"8515451",
+        database:"u67381",
     });
 
     db.connect((err) => {
