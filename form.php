@@ -1,8 +1,18 @@
 <?php
-    $user_login = $_GET['login'];
-    $user_pass = $_GET['pass'];
-    $answer = $_GET['answer'];
-    $strdate = $_GET["strdate"];
+
+
+    if(!empty($_GET['login'])) {
+        $login = $_GET["login"];
+        }
+    if(!empty($_GET['pass'])) {
+        $pass = $_GET["pass"];
+        }
+    if(!empty($_GET['answer'])) {
+        $answer = $_GET["answer"];
+        }
+    if(!empty($_GET['strdate'])) {
+        $strdate = $_GET["strdate"];
+        }
     
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $name = $_POST["name"];
@@ -47,6 +57,7 @@
         }
 
 
+
         $safe_str = htmlspecialchars($about, ENT_QUOTES);
 
         
@@ -55,26 +66,30 @@
         }else{
             $login = urlencode(substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"), 0, 6));
             $pass = urlencode(substr(str_shuffle("0123456789"), 0, 5));
-            $url = 'http://95.213.139.91:600/answer';
-            $data = array(
-                "name" => $name,
-                "email" => $email,
-                "number" => $number,
-                "date" => $date,
-                "gen" => $gen,
-                "lengs" => $lengs,
-                "about" => $about,
-                "login" => $login,
-                "pass" => $pass,
-            );
-            $options = array(
-                'http' => array(
-                    'method'  => 'POST',
-                    'content' => http_build_query($data),
-                ),
-            );
-            $context  = stream_context_create($options);
-            $result = file_get_contents($url, false, $context);
+
+            $servername1 = "localhost";
+            $username1 = "u67381";
+            $password1 = "8515451";
+            $dbname1 = "u67381";
+            $conn = new mysqli($servername1, $username1, $password1, $dbname1);
+            // Проверка соединения
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+            $sql = "INSERT INTO users(name, number, mail, date, gen, about, pass, login) VALUES ('$name', '$number', '$email', '$date', '$gen', '$about', '$pass','$login')";
+            
+            if ($conn->query($sql) === TRUE) {
+                echo "Данные успешно сохранены в базе данных, <br/>";
+            } else {
+                echo "Ошибка: " . $sql . "<br>" . $conn->error;
+            }
+            $result = $conn->query("SELECT id from users where name = '$name'");
+            $row = $result->fetch_assoc();
+            $id = $row['id'];
+            foreach($lengs as $leng){
+                $conn->query("INSERT INTO user_lengs(user_id, leng_id) SELECT $id , lengs.id FROM lengs WHERE lengs.leng = '$leng'");
+            }
+
             $answer = "Данные отправлены!";
             $answer = urlencode($answer);
             header("Location: form.php?answer=".$answer."&login=".$login."&pass=".$pass);
@@ -93,15 +108,28 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1><?php echo $answer ?></h1>
+    <h1><?php 
+    if(!empty($_GET['answer'])) {
+        echo $answer;
+        } ?></h1>
     <h1>
         <?php
-            if($answer != ""){
-                echo "Логин-".$user_login."  Пароль-".$user_pass;
+        if(!empty($_GET['answer'])) {
+            if($answer != "") {
+
+                if($answer != ""){
+                    if(!empty($_GET['login'])) {
+                    echo "Логин-".$login;
+                    }
+                    if(!empty($_GET['pass'])) {
+                    echo " Пароль-".$pass;
+                    }
+                }
             }
             if(!empty($_COOKIE['about'])){
                 echo "Вы ввели недопустимый код в поле 'Напишите о себе'";
             }
+        }
         ?>
     </h1>
     <form id="form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
@@ -109,16 +137,16 @@
             <div class="info">
                 <div class="input">
                     <!-- Имя -->
-                    <input class="<?php echo $_COOKIE['nameErr'] ?>" name="name" id="name" type="text" value="<?php echo $_COOKIE["name"]; ?>" placeholder="Введите имя" required>
-                        <span class="span <?php echo $_COOKIE['nameErr'] ?>"> <?php if(isset($_COOKIE['nameErr'])) echo "Неверные символы" ?> </span>
+                    <input class="<?php if(!empty($_COOKIE['nameErr'])) { echo $_COOKIE['nameErr']; } ?>" name="name" id="name" type="text" value="<?php if(!empty($_COOKIE['name'])) { echo $_COOKIE["name"]; } ?>" placeholder="Введите имя" required>
+                        <span class="span <?php if(!empty($_COOKIE['nameErr'])) { echo $_COOKIE['nameErr']; } ?>"> <?php if(isset($_COOKIE['nameErr'])) echo "Неверные символы" ?> </span>
                     <!-- Номер -->
-                    <input class="<?php echo $_COOKIE['numberErr'] ?>" name="number" id="number" type="number" value="<?php echo $_COOKIE["number"]; ?>" placeholder="Введите телефон" required>
-                        <span class="span <?php echo $_COOKIE['numberErr'] ?>"> <?php if(isset($_COOKIE['numberErr'])) echo "Неправильное количество цифр" ?> </span>
+                    <input class="<?php if(!empty($_COOKIE['numberErr'])) { echo $_COOKIE['numberErr']; } ?>" name="number" id="number" type="number" value="<?php if(!empty($_COOKIE['number'])) {  echo $_COOKIE["number"]; }?>" placeholder="Введите телефон" required>
+                        <span class="span <?php if(!empty($_COOKIE['numberErr'])) { echo $_COOKIE['numberErr']; } ?>"> <?php if(isset($_COOKIE['numberErr'])) echo "Неправильное количество цифр" ?> </span>
                     <!-- Почта -->
-                    <input name="email" id="email" type="email" value="<?php echo $_COOKIE["email"]; ?>" placeholder="Введите почту" required>
+                    <input name="email" id="email" type="email" value="<?php if(!empty($_COOKIE['email'])) { echo $_COOKIE["email"];} ?>" placeholder="Введите почту" required>
                     <!-- Дата -->
-                    <input class="<?php echo $_COOKIE['dateErr']?>" name="date" id="date" type="date" value="<?php echo $_COOKIE['date']?>" placeholder="" required>
-                        <span class="span <?php echo $_COOKIE['dateErr'] ?>"> <?php if(isset($_COOKIE['dateErr'])) echo "Некорректная дата" ?> </span>
+                    <input class="<?php if(!empty($_COOKIE['dateErr'])) { echo $_COOKIE['dateErr']; } ?>" name="date" id="date" type="date" value="<?php if(!empty($_COOKIE['date'])) { echo $_COOKIE['date']; }?>" placeholder="" required>
+                        <span class="span <?php if(!empty($_COOKIE['dateErr'])) { echo $_COOKIE['dateErr']; } ?>"> <?php if(isset($_COOKIE['dateErr'])) echo "Некорректная дата" ?> </span>
                 </div>
                 <div class="cheked">
                     <div class="radio_pol">
@@ -158,6 +186,5 @@
         </div>
     </form>
     <a href="index.php"><button>Назад</button></a>
-    <!-- <a href="http://95.213.139.91:600/tables"><button class="button" type="submit" disabled >Таблицы</button></a> -->
 </body>
 </html>

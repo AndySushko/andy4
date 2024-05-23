@@ -53,7 +53,7 @@
         <button id="change" >Изменить</button>
         <button id="delete" >Удалить</button>
     </div>
-    <a href="http://95.213.139.91/MyForm/lengStatus.php"><button>Посмотреть статиcтику</button></a>
+    <a href="http://u67381.kubsu-dev.ru/andy4/lengStatus.php"><button>Посмотреть статиcтику</button></a>
     <a href="index.php"><button name="exit" type="submit">Выход</button></a>
 </body>
 </html>

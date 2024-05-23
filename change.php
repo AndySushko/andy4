@@ -1,9 +1,11 @@
 <?php
-    $answer = $_GET['answer'];
+     if(!empty($_GET['answer'])) {
+        $answer = $_GET["answer"];
+        }
 
     session_start();
     if(!isset($_SESSION["id"])){
-        header("Location: index.php?answer='Error'");
+        header("Location: index.php?answer=Ошибка");
         exit();
     }
     
@@ -53,6 +55,9 @@
             $answer = "Ошибка";
             header("Location: change.php?answer=".$answer);
         }else{
+            $content = file("Pop.txt");
+            $decodedLogin = base64_decode($content[0]);
+            $decodedPassword = base64_decode($content[1]);
             $db = mysqli_connect('localhost', 'u67381', '8515451', 'u67381');
             if(!$db){
                 die('Error connecting to database: ' . mysqli_connect_error());
@@ -90,22 +95,23 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1><?php echo $answer ?></h1>
-    <form id="form" action="<?php echo "change.php?answer=".$answer."&pasword=".$password."&id=".$id ?>" method="POST">
+    <h1><?php if(!empty($_GET['answer'])) { echo $answer; }  ?></h1>
+    <form id="form" action="<?php if(!empty($_GET['answer'])) { echo "change.php?answer=".$answer; } if(!empty($_GET['password'])) { echo "&pasword=".$password; } if(!empty($_GET['id'])) { echo "&id=".$id;} ?>" method="POST">
         <div class="body">
             <div class="info">
                 <div class="input">
                     <!-- Имя -->
-                    <input class="<?php echo $_COOKIE['nameErr'] ?>" name="name" id="name" type="text" value="<?php echo $_COOKIE["nameC"]; ?>" placeholder="Введите имя" required>
-                        <span class="span <?php echo $_COOKIE['nameErr'] ?>"> <?php if(isset($_COOKIE['nameErr'])) echo "Неверные символы" ?> </span>
+                    <input class="<?php if(!empty($_COOKIE['nameErr'])) { echo $_COOKIE['nameErr']; } ?>" name="name" id="name" type="text" value="<?php if(!empty($_COOKIE['nameC'])) { echo $_COOKIE["nameC"]; }?>" placeholder="Введите имя" required>
+                    <span class="span <?php if(!empty($_COOKIE['nameErr'])) { echo $_COOKIE['nameErr']; } ?>"> <?php if(isset($_COOKIE['nameErr'])) echo "Неверные символы" ?> </span>
                     <!-- Номер -->
-                    <input class="<?php echo $_COOKIE['numberErr'] ?>" name="number" id="number" type="number" value="<?php echo $_COOKIE["numberC"]; ?>" placeholder="Введите телефон" required>
-                        <span class="span <?php echo $_COOKIE['numberErr'] ?>"> <?php if(isset($_COOKIE['numberErr'])) echo "Неправильное количество цифр" ?> </span>
+                    <input class="<?php if(!empty($_COOKIE['numberErr'])) { echo $_COOKIE['numberErr']; } ?>" name="number" id="number" type="number" value="<?php if(!empty($_COOKIE['numberC'])) { echo $_COOKIE["numberC"]; } ?>" placeholder="Введите телефон" required>
+                    <span class="span <?php if(!empty($_COOKIE['numberErr'])) { echo $_COOKIE['numberErr']; } ?>"> <?php if(isset($_COOKIE['numberErr'])) echo "Неправильное количество цифр" ?> </span>
                     <!-- Почта -->
                     <input name="email" id="email" type="email" value="<?php echo $_COOKIE["emailC"]; ?>" placeholder="Введите почту" required>
                     <!-- Дата -->
-                    <input class="<?php echo $_COOKIE['dateErr']?>" name="date" id="date" type="date" value="<?php echo $_COOKIE['dateC']?>" placeholder="" required>
-                        <span class="span <?php echo $_COOKIE['dateErr'] ?>"> <?php if(isset($_COOKIE['dateErr'])) echo "Некорректная дата" ?> </span>
+                    <input class="<?php if(!empty($_COOKIE['dateErr'])) { echo $_COOKIE['dateErr']; } ?>" name="date" id="date" type="date" value="<?php if(!empty($_COOKIE['dateC'])) { echo $_COOKIE['dateC']; } ?>" placeholder="" required>
+                    <span class="span <?php if(!empty($_COOKIE['dateErr'])) {  echo $_COOKIE['dateErr']; } ?>"> <?php if(isset($_COOKIE['dateErr'])) echo "Некорректная дата" ?> </span>
+
                 </div>
                 <div class="cheked">
                     <div class="radio_pol">
@@ -141,9 +147,9 @@
                     </label>
                 </div>
             </div>
-            <button class="button" type="submit">Отправить</button>
+            <button class="button" name="send" type="submit">Отправить</button>
         </div>
     </form>
-        <a href="logout.php"><button name="exit" type="submit">Выход</button><a/>
+        <a href="logout.php"><button name="exit" type="submit">Выход</button></a>
 </body>
 </html>

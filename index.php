@@ -1,5 +1,7 @@
 <?php
+if(!empty($_GET['answer'])) {
 $answer = $_GET["answer"];
+}
 
 session_start();
 if(isset($_SESSION['id'])) {
@@ -58,7 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="content">
         <div class="loginForm">
             <h1>Войдите что бы менять таблицу</h1>
-            <p class="error"><?php echo $answer; ?></p>
+            <p class="error"><?php 
+            if(!empty($_GET['answer'])) {
+                echo $answer;
+            } ?></p>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" >
                 <input name="login" type="text" placeholder="Login">
                 <input name="password" type="password" placeholder="Password">
@@ -67,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             </form>
             <a href="http://u67381.kubsu-dev.ru/andy4/form.php"><button>Я новый пользователь</button></a>
-            <!-- <a href="http://u67381.kubsu-dev.ru/andy4/admin.php"><button>Войти как администратор</button></a> -->
+            <a href="http://u67381.kubsu-dev.ru/andy4/admin.php"><button>Войти как администратор</button></a>
         </div>
     </div>
 </body>
